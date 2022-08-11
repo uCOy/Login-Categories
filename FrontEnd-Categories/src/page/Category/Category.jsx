@@ -5,10 +5,13 @@ import { Context } from '../../Context/AuthContext';
 import Table from 'react-bootstrap/Table';
 import './category.css'
 import { confirmAlert } from 'react-confirm-alert';
+import { useHistory } from 'react-router-dom';
 
 import { Nav, Navbar, Container, Button, Form } from 'react-bootstrap';
 
 export const ListaCategories = () => {
+
+    const history = useHistory();
 
     const [data, setData] = useState([]);
 

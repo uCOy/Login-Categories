@@ -49,11 +49,8 @@ export function Login() {
     }
 
     await api.post("/users/login", user, {headers})
-
     .then((response) => {
-
       // console.log(response);
-
       setStatus({
         type: 'success',
         mensagem: response.data.mensagem
