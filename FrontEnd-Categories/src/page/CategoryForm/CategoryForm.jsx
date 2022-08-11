@@ -112,7 +112,7 @@ export const CategoryForm = (props) => {
                       }  
                   })
         } else {
-          await api.put("/user", values, headers)
+          await api.put("/categories/update", values, headers)
               .then( (response) => {
                       console.log(response);
                       setStatus({loading: false});
