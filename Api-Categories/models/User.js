@@ -23,6 +23,10 @@ const User = db.define('richard_users', {
     password: {
         type: Sequelize.STRING,
         allowNull: false
+    },
+    image: {
+        type: Sequelize.STRING,
+        allowNull: true
     }
 });
 

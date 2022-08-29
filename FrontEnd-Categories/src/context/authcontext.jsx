@@ -40,7 +40,6 @@ function AuthProvider({children}){
             })
     }
 
-
     function singIn(state){
         setAuthenticated(true);
     }

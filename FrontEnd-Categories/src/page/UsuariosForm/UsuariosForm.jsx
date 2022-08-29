@@ -5,19 +5,19 @@ import Alert from 'react-bootstrap/Alert';
 import { Container } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-// import '../../components/Login/styles.css';
+import '../../components/Login/styles.css';
 import { Context } from '../../Context/AuthContext';
 import { Nav, Navbar } from 'react-bootstrap';
 import { NavBar } from '../../components/UI/NavBar/NavBar'
 
 
-
 const initialValue = {
     name: '',
-    description: ''
+    email: '',
+    password: ''
 }
 
-export const CategoryForm = (props) => {
+export const UsuariosForm = (props) => {
 
     const history = useHistory();
 
@@ -41,7 +41,7 @@ export const CategoryForm = (props) => {
 
     useEffect( () => {
 
-      const getCategory = async () => {
+      const getUser = async () => {
 
         const valueToken = localStorage.getItem('token');
         const headers = {
@@ -51,15 +51,15 @@ export const CategoryForm = (props) => {
             }
         }
 
-        await api.get("/categories/show/"+id, headers)
+        await api.get("/user/"+id, headers)
             .then( (response) => {
-                if(response.data.categories){
-                  setValues(response.data.categories);
+                if(response.data.users){
+                  setValues(response.data.users);
                   setAcao('Editar')
                 } else {
                   setStatus({
                     type: 'warning',
-                    mensagem:'Categorias não encontrada!!!'
+                    mensagem:'Usuário não encontrado!!!'
                   })
                 } 
                 // setData(response.data.users)
@@ -78,7 +78,7 @@ export const CategoryForm = (props) => {
             })
     }
     
-    if(id) getCategory();
+    if(id) getUser();
     }, [id])
 
     const formSubmit = async e => {
@@ -93,11 +93,11 @@ export const CategoryForm = (props) => {
 
         if(!id){
 
-          await api.post("/categories/create", values, headers)
+          await api.post("/user", values, headers)
               .then( (response) => {
                       console.log(response);
                       setStatus({loading: false});
-                      return history.push('/category')
+                      return history.push('/usuarios')
                   }).catch( (err) => {
                       if(err.response){
                           setStatus({
@@ -114,11 +114,11 @@ export const CategoryForm = (props) => {
                       }  
                   })
         } else {
-          await api.put("/categories/update", values, headers)
+          await api.put("/user", values, headers)
               .then( (response) => {
                       console.log(response);
                       setStatus({loading: false});
-                      return history.push('/category')
+                      return history.push('/usuarios')
                   }).catch( (err) => {
                       if(err.response){
                           setStatus({
@@ -141,7 +141,7 @@ export const CategoryForm = (props) => {
         <div>    
             <NavBar />
             <Container className="box">
-              <h1>{acao} Categorias</h1>
+              <h1>{acao} Usuário</h1>
               <Form onSubmit={formSubmit} className="borderForm">
                 {/* {status.type == 'error' ? <p>{status.mensagem}</p>: ""} */}
                 {/* {status.type == 'success' ? <p>{status.mensagem}</p>: ""} */}
@@ -172,16 +172,20 @@ export const CategoryForm = (props) => {
                   <Form.Control type="text" name="name" value={values.name} onChange={valorInput} placeholder="Enter Name" />
                 </Form.Group>  
 
-                <Form.Group className="mb-3" controlId="formBasicDescription">
-                  <Form.Label>Category Description</Form.Label>
-                  <Form.Control type="text" name="description" value={values.description} onChange={valorInput} placeholder="Enter Description" />
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control type="email" name="email" value={values.email} onChange={valorInput} placeholder="Enter email" />
+                  <Form.Text className="text-muted">
+                    We'll never share your email with anyone else.
+                    {/* Nunca compartilharemos seu e-mail com mais ninguém */}
+                  </Form.Text>
                 </Form.Group>
-                {/* {!id &&
+                {!id &&
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label>Password</Form.Label>
                   <Form.Control type="password" name="password" value={values.password} onChange={valorInput} placeholder="Password" />
                 </Form.Group>
-                } */}
+                }
                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
                   <Form.Check type="checkbox" label="Check me out" />
                 </Form.Group>

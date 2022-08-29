@@ -3,17 +3,13 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import { Context } from '../../Context/AuthContext';
 import Table from 'react-bootstrap/Table';
-import './category.css'
+import './listaUsuarios.css'
 import { confirmAlert } from 'react-confirm-alert';
-import { useHistory } from 'react-router-dom';
-import { NavBar } from '../../components/UI/NavBar/NavBar'
-
 
 import { Nav, Navbar, Container, Button, Form } from 'react-bootstrap';
+import { NavBar } from '../../components/UI/NavBar/NavBar'
 
-export const ListaCategories = () => {
-
-    const history = useHistory();
+export const ListaUsuarios = () => {
 
     const [data, setData] = useState([]);
 
@@ -24,28 +20,28 @@ export const ListaCategories = () => {
         mensagem:''
     })
 
-    const confirmDelete = (categories) => {
+    const confirmDelete = (user) => {
         confirmAlert({
           title: "CAUTION !!!!",
           message:
             "Are you absolutely sure you want to delete section " +
-            categories.id +
+            user.id +
             "?",
           buttons: [
             {
               label: "Yes",
-              onClick: () => handleDelete(categories.id)
+              onClick: () => handleDelete(user.id)
             },
             {
               label: "No",
-              onClick: () => history.push("/category")
+              onClick: () => history.push("/usuarios")
             }
           ]
         });
       };
 
-    const handleDelete = async (idCategories) => {
-        console.log(idCategories);
+    const handleDelete = async (idUser) => {
+        // console.log(idUser);
 
         const valueToken = localStorage.getItem('token');
         const headers = {
@@ -54,7 +50,7 @@ export const ListaCategories = () => {
             }
         }
 
-        await api.delete("/categories/delete/"+idCategories, headers)
+        await api.delete("/user/"+idUser, headers)
         .then( (response) => {
             setStatus({
                 type: 'sucess',
@@ -76,7 +72,7 @@ export const ListaCategories = () => {
         })
     }
 
-    const getCategories = async () => {
+    const getUsers = async () => {
 
         const valueToken = localStorage.getItem('token');
         const headers = {
@@ -85,9 +81,9 @@ export const ListaCategories = () => {
             }
         }
 
-        await api.get("/categories/all", headers)
+        await api.get("/users/all", headers)
             .then( (response) => {
-                setData(response.data.categories)
+                setData(response.data.users)
                 setStatus({loading: false})
             }).catch( (err) => {
                 if(err.response){
@@ -105,18 +101,17 @@ export const ListaCategories = () => {
     }
 
     useEffect( () => {
-        getCategories();
+        getUsers();
     }, [])
 
     return(
         <div>
             <NavBar />
-            
         
-            <h1 className="userCenter">Categorias</h1>
+            <h1 className="userCenter">Usuários</h1>
 
             <div className="buttonDiv">
-                <Button className="buttonNew" variant="outline-success" href="/category/novo">Nova Categoria</Button>{' '}
+                <Button className="buttonNew" variant="outline-success" href="/usuarios/novo">Novo Usuario</Button>{' '}
             </div>
 <div className="table">
             <Table striped bordered hover>
@@ -124,19 +119,19 @@ export const ListaCategories = () => {
                 <tr>
                     <th>#</th>
                     <th>Nome</th>
-                    <th>Description</th>
+                    <th>Email</th>
                 </tr>
                 {(!status.loading &&
-                data.map(categories => (
-                        <tr key={categories.id}>
-                            <td>{categories.id}</td>
-                            <td>{categories.name}</td>
-                            <td>{categories.description}</td>
+                data.map(user => (
+                        <tr key={user.id}>
+                            <td>{user.id}</td>
+                            <td>{user.name}</td>
+                            <td>{user.email}</td>
                             <td className="spaceFlex">
                             <Button className="noLink" variant="outline-warning">
-                                <Link className="onLink" to={"/category/editar/"+categories.id}>Editar</Link>
+                                <Link className="onLink" to={"/usuarios/editar/"+user.id}>Editar</Link>
                             </Button>
-                            <Button variant="outline-danger" onClick={() => confirmDelete(categories)}>
+                            <Button variant="outline-danger" onClick={() => confirmDelete(user)}>
                                 Excluir
                             </Button>
                             </td>

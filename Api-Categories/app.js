@@ -3,12 +3,16 @@ const app = express();
 require('dotenv').config();
 var cors = require('cors');
 
+// ********** trabalhar com arquivos FS file system ********** //
+const fs = require('fs');
+
+// ********** Caminho de pasta path ********** //
+const path = require('path');
+
+// ********** Caminho para pasta upload ********** //
+app.use('/files', express.static(path.resolve(__dirname, "public", "upload")))
 
 const router = require('./routes/index');
-
-const Categories = require('./models/Categories');
-const Products = require('./models/Products');
-const User = require('./models/User');
 
 app.use( (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");

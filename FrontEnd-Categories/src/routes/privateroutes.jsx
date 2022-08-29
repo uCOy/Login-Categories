@@ -1,34 +1,40 @@
-import React, { useContext } from 'react';
+import React, { useContext } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 
-import { Context } from '../Context/AuthContext';
-
-import { Login } from '../components/Login/Login';
-import { Dashboard } from '../page/Dashboard/Dashboard';
+import { Dashboard } from '../page/Dashboard/Dashboard'
+import { Login } from '../components/Login/Login'
+import { ListaUsuarios } from '../page/Usuarios/ListaUsuarios'
+import { UsuariosForm } from '../page/UsuariosForm/UsuariosForm';
+// import { ProdutosForm } from '../page/ProdutosForm/ProdutosForm';
 import { ListaCategories } from '../page/Category/Category';
-import { CategoryForm } from '../page/CategoryForm/CategoryForm';
+import { UsuariosFormView } from '../page/UsuariosForm/UsuariosFormView';
 
-// import { NewUser } from '../page/NewUser/NewUser';  Criar usuario pelo frontend
+import { Context } from '../Context/AuthContext'
 
-function CustomRoute({ isPrivate, ...rest}){
+function CustomRoute({isPrivate, ...rest}){
+  const { authenticated} = useContext(Context)
+  if(isPrivate && !authenticated){
+    return <Redirect to="/" />
+  }
 
-    const { authenticated } = useContext(Context);
-    if( isPrivate && ! authenticated){
-        return <Redirect to="/" />
-    }
-    return <Route { ...rest } />
+  return <Route { ...rest} />
 
 }
 
 export default function PrivateRoute(){
-    return(
-        <Switch>
-              <CustomRoute exact path="/" component={Login} />
-              {/* <CustomRoute exact path="/newuser" component={NewUser} /> */}
-              <CustomRoute isPrivate path="/dashboard" component={Dashboard} />
-              <CustomRoute isPrivate path="/category/novo" component={CategoryForm} />
-              <CustomRoute isPrivate path="/category/editar/:id" component={CategoryForm} />
-              <CustomRoute isPrivate path="/category" component={ListaCategories} />
-        </Switch>
-    )
+
+  return(
+
+    <Switch>
+      <CustomRoute exact path="/" component={Login}/>
+      <CustomRoute isPrivate path="/dashboard" component={Dashboard}/>
+      <CustomRoute isPrivate path="/usuarios/novo" component={UsuariosForm} />
+      <CustomRoute isPrivate path="/usuarios/editar/:id" component={UsuariosForm} />
+      <CustomRoute isPrivate path="/usuarios" component={ListaUsuarios} />
+      {/* <CustomRoute path="/produtos/novo" component={ProdutosForm} /> */}
+      <CustomRoute path="/categories" component={ListaCategories} />
+      <CustomRoute path="/profile" component={UsuariosFormView} />
+    </Switch>
+    
+  )
 }

@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const sendMail = require('../providers/mailProvider');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
 exports.findAll = async (req, res) => {
     await User.findAll({
@@ -113,6 +114,35 @@ exports.update = async (req, res) => {
     })
 };
 
+exports.viewProfile = async (req, res) => {
+    const { id } = req.params;
+    try {
+        // await User.findAll({ where: {id: id}})
+        const users = await User.findByPk(id);
+        if(!users){
+            return res.status(400).json({
+                erro: true,
+                mensagem: "Erro: Nenhum Usuário encontrado!"
+            })
+        }
+        if(users.image){
+            var endImagem = process.env.URL_IMG + "/files/users/"+ users.image;
+        } else {
+            var endImagem = "";
+        }
+        res.status(200).json({
+            erro:false,
+            users,
+            endImagem
+        })
+    } catch (err){
+        res.status(400).json({
+            erro: true,
+            mensagem: `Erro: ${err}`
+        })
+    }
+};
+
 exports.delete = async (req, res) => {
     const { id } = req.params;
     await User.destroy({ where: {id}})
@@ -165,7 +195,8 @@ exports.login = async (req, res) => {
     return res.json({
         erro:false,
         mensagem: "Login realizado com sucesso!!!",
-        token
+        token,
+        user: user.id
     })
     
     // const user = await User.findOne({
@@ -243,3 +274,50 @@ exports.validatoken = async(req, res) => {
         })
     })
 };
+
+exports.editProfileImage = async (req, res) => {
+    if(req.file){
+        // console.log(req.file);
+    
+        await User.findByPk(req.userId)
+        .then( user =>{
+            // console.log(user);
+            const imgOld = './public/upload/users/' + user.dataValues.image
+
+            fs.access(imgOld, (err) =>{
+                if(!err){
+                    fs.unlink(imgOld, () =>{})
+                }
+
+            })
+
+        }).catch( () =>{
+            return res.status(400).json({
+                erro: true,
+                mensagem: "Erro: Perfil do Usuário não encontrado!"
+            })
+        })
+
+
+        await User.update({image: req.file.filename}, 
+            {where: {id: req.userId}})
+        .then(() => {
+            return res.json({
+                erro: false,
+                mensagem: "Imagem do Usuário editada com sucesso!"
+            })
+        }).catch( (err) =>{
+            return res.status(400).json({
+                erro: true,
+                mensagem: `Erro: Imagem não editada...${err}`
+            })
+        })        
+
+        
+    } else {
+        return res.status(400).json({
+            erro: true,
+            mensagem: "Erro: Selecione uma imagem válida (.png, .jpg) !"
+        })
+    }
+}
