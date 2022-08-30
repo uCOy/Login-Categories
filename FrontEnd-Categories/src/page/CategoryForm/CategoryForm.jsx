@@ -17,7 +17,7 @@ const initialValue = {
     description: ''
 }
 
-export const CategoryForm = (props) => {
+export const CategoriesForm = (props) => {
 
     const history = useHistory();
 

@@ -74,9 +74,11 @@ export const UsuariosFormView = () => {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         }
+        const formData = new FormData();
+        formData.append('image', image);
 
 
-            await api.put("/users/edit-profile-image", values, headers)
+            await api.put("/users/edit-profile-image", formData, headers)
                 .then((response) => {
                     setStatus({ loading: false })
                     return history.push('/usuarios')

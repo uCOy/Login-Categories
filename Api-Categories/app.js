@@ -3,9 +3,6 @@ const app = express();
 require('dotenv').config();
 var cors = require('cors');
 
-// ********** trabalhar com arquivos FS file system ********** //
-const fs = require('fs');
-
 // ********** Caminho de pasta path ********** //
 const path = require('path');
 

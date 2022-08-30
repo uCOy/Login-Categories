@@ -38,7 +38,7 @@ export const ListaCategories = () => {
             },
             {
               label: "No",
-              onClick: () => history.push("/category")
+              onClick: () => history.push("/categories")
             }
           ]
         });
@@ -116,7 +116,7 @@ export const ListaCategories = () => {
             <h1 className="userCenter">Categorias</h1>
 
             <div className="buttonDiv">
-                <Button className="buttonNew" variant="outline-success" href="/category/novo">Nova Categoria</Button>{' '}
+                <Button className="buttonNew" variant="outline-success" href="/categories/novo">Nova Categoria</Button>{' '}
             </div>
 <div className="table">
             <Table striped bordered hover>
@@ -134,7 +134,7 @@ export const ListaCategories = () => {
                             <td>{categories.description}</td>
                             <td className="spaceFlex">
                             <Button className="noLink" variant="outline-warning">
-                                <Link className="onLink" to={"/category/editar/"+categories.id}>Editar</Link>
+                                <Link className="onLink" to={"/categories/editar/"+categories.id}>Editar</Link>
                             </Button>
                             <Button variant="outline-danger" onClick={() => confirmDelete(categories)}>
                                 Excluir

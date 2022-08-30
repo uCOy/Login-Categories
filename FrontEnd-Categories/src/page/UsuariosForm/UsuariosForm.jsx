@@ -51,7 +51,7 @@ export const UsuariosForm = (props) => {
             }
         }
 
-        await api.get("/user/"+id, headers)
+        await api.get("/users/show/"+id, headers)
             .then( (response) => {
                 if(response.data.users){
                   setValues(response.data.users);
@@ -93,7 +93,7 @@ export const UsuariosForm = (props) => {
 
         if(!id){
 
-          await api.post("/user", values, headers)
+          await api.post("/users/create", values, headers)
               .then( (response) => {
                       console.log(response);
                       setStatus({loading: false});
@@ -114,7 +114,7 @@ export const UsuariosForm = (props) => {
                       }  
                   })
         } else {
-          await api.put("/user", values, headers)
+          await api.put("/users/update", values, headers)
               .then( (response) => {
                       console.log(response);
                       setStatus({loading: false});
